@@ -1,48 +1,46 @@
 package com.stefanini.resources;
 
+import com.stefanini.dto.JogadorDTO;
 import com.stefanini.entity.Jogador;
+import com.stefanini.handlers.BadRequestHandler;
 import com.stefanini.service.JogadorService;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@ApplicationPath("/jogador")
+@Path("/jogador")
 public class JogadorResource {
 
     @Inject
     JogadorService jogadorService;
 
-    @GET
-    @Path("/{id}")
-    public Response pegarPorId(@PathParam("id") Long id){
-        return Response.status(Response.Status.OK).entity(jogadorService.pegarPorId(id)).build();
-    }
-
-    @GET
-    @Path("/todos")
-    public Response listarTodos(){
-        return Response.status(Response.Status.OK).entity(jogadorService.listarTodos()).build();
-    }
-
     @POST
-    public Response salvar(@Valid Jogador jogador) {
-        jogadorService.salvar(jogador);
-        return Response.status(Response.Status.CREATED).build();
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response salvar(JogadorDTO jogador) throws BadRequestHandler {
+    	try {
+    		JogadorDTO jogadorDto = jogadorService.salvar(jogador);
+    		return Response.status(Response.Status.CREATED).entity(jogadorDto).build();
+    	} catch (BadRequestHandler e) {
+    		 return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+    	}
     }
-
     @POST
-    public Response alterar(@Valid Jogador jogador) {
-        jogadorService.alterar(jogador);
-        return Response.status(Response.Status.OK).build();
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(Map<String, ?> body) throws BadRequestHandler {
+    	try {
+    		JogadorDTO jogadorDto = jogadorService.login(body);
+    		return Response.status(Response.Status.CREATED).entity(jogadorDto).build();
+    	} catch (BadRequestHandler e) {
+   		 	return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+    	}
     }
-
-    @POST
-    @Path("/{id}")
-    public Response deletar(@PathParam("id") Long id) {
-        jogadorService.deletar(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
-
+	
 }

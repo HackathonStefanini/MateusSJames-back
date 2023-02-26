@@ -9,12 +9,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-@ApplicationPath("/stefamon")
+@Path("/stefamon")
 public class StefamonResource {
 
     @Inject
     StefamonService service;
-
+    /*
     @GET
     @Path("/todos")
     public Response listarTodos() {
@@ -25,6 +25,6 @@ public class StefamonResource {
     @Path("/{id}")
     public Response pegarPorId(@PathParam("id") Long id) {
         return Response.status(Response.Status.OK).entity(service.pegarPorId(id)).build();
-    }
+    } */
 
 }
